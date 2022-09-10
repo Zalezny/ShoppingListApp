@@ -8,8 +8,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shooppingg.R
+import com.example.shooppingg.model.CreatorModel
+import com.example.shooppingg.viewmodel.CreatorViewModel
 
-class CreatorRVAdapter(private val itemsList : ArrayList<String>) : RecyclerView.Adapter<CreatorRVAdapter.CreatorViewHolder>() {
+class CreatorRVAdapter(private val itemsList : ArrayList<CreatorModel>) : RecyclerView.Adapter<CreatorRVAdapter.CreatorViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreatorViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
@@ -21,7 +23,9 @@ class CreatorRVAdapter(private val itemsList : ArrayList<String>) : RecyclerView
 
     override fun onBindViewHolder(holder: CreatorViewHolder, position: Int) {
         val currItem = itemsList[position]
-        holder.tvItemCreator.text = currItem
+        holder.tvItemCreator.text = currItem.title
+        holder.tvAmountCreator.text = currItem.amount.toString()
+
 
         holder.ivDeleteCreator.setOnClickListener {
             removeItem(position)
@@ -31,10 +35,13 @@ class CreatorRVAdapter(private val itemsList : ArrayList<String>) : RecyclerView
         var amountInt = amount.text.toString().toInt()
 
         holder.ivRemoveAmountCreator.setOnClickListener {
-            if(amountInt == 1)
+            if(amountInt == 1) {
                 removeItem(position)
+                return@setOnClickListener
+            }
             amountInt -= 1
-            amount.text = amountInt.toString()
+            itemsList[position].amount = amountInt
+            amount.text = itemsList[position].amount.toString()
         }
         holder.ivAddAmountCreator.setOnClickListener { v ->
 
@@ -46,6 +53,7 @@ class CreatorRVAdapter(private val itemsList : ArrayList<String>) : RecyclerView
             amount.text = amountInt.toString()
 
         }
+
 
 
     }

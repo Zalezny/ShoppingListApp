@@ -5,17 +5,20 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.AutoCompleteTextView
 import android.widget.TextView
-import androidx.core.widget.addTextChangedListener
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shooppingg.databinding.FragmentCreatorBinding
+import com.example.shooppingg.model.CreatorModel
 import com.example.shooppingg.view.adapters.CreatorRVAdapter
-import com.example.shooppingg.viewmodel.DashboardViewModel
+import com.example.shooppingg.viewmodel.CreatorViewModel
 
 class CreatorFragment : Fragment() {
+    private val viewModel: CreatorViewModel by activityViewModels()
 
     private var _binding: FragmentCreatorBinding? = null
 
@@ -28,22 +31,27 @@ class CreatorFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+        val creatorViewModel =
+            ViewModelProvider(this).get(CreatorViewModel::class.java)
 
         _binding = FragmentCreatorBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+
+        val exFabCreator = binding.creatorExtendedFab
         // Text View of Creator
         val tvCreator = binding.creatorListTextView
         // Autocomplete Text View of Creator
         val atvCreator = binding.creatorListAutoCompleteTextView
         // Recycler View of Creator
         val rvCreator = binding.creatorListItemRecyclerView
-        // Array List of items
-        val itemsList : ArrayList<String> = arrayListOf()
         // Adapter of CreatorRVAdapter
-        val rvAdapter = CreatorRVAdapter(itemsList)
+        val rvAdapter = CreatorRVAdapter(viewModel.itemsList.value!!)
+
+        // init observers ui
+        initObservers(atvCreator)
+
+        viewModel.setRecyclerViewAdapter(rvAdapter)
         // Set layout manager of rvCreator
         rvCreator.layoutManager = LinearLayoutManager(context)
         // Set adapter of rvCreator
@@ -55,23 +63,22 @@ class CreatorFragment : Fragment() {
         atvCreator.setOnKeyListener { _, i, keyEvent ->
             if(keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER) {
                 // selected item/ write item in atvCreator
-                val item = atvCreator.text.toString()
+                viewModel.setAtvText(atvCreator.text.toString())
+                val item = viewModel.getAtvText().value!!
+
                 // check item is exist?
                 if(checkItem(item))
                     {
-                        itemsList.add(item)
+                        val obj = CreatorModel(item)
+                        viewModel.addItem(obj)
                         rvAdapter.notifyDataSetChanged()
-                        atvCreator.text.clear()
+                        viewModel.setAtvText("")
+                        exFabCreator.visibility = View.VISIBLE
                     }
 
             }
             false
         }
-
-
-
-
-
 
         
         return root
@@ -82,8 +89,28 @@ class CreatorFragment : Fragment() {
         _binding = null
     }
 
+    private fun initObservers(atvCreator : AutoCompleteTextView) {
+        //set text on the start of atvText
+        atvCreator.setText(viewModel.getAtvText().value)
+        //observer of atvText
+        viewModel.getAtvText().observe(viewLifecycleOwner){
+            atvCreator.setText(it)
+        }
+    }
+
     private fun checkItem(item : String) : Boolean {
+        //check is empty or null
+        if(item.isNullOrEmpty()) {
+            toastMessage("Cannot be null!!")
+            return false
+        }
         //todo: check item is exist?
         return true
+    }
+
+    //toast message scheme (default value of shortMsg is true
+    private fun toastMessage(message : String, shortMsg: Boolean = true) {
+        if(shortMsg) Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        else Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
