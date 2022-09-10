@@ -11,7 +11,9 @@ import com.example.shooppingg.R
 import com.example.shooppingg.model.CreatorModel
 import com.example.shooppingg.viewmodel.CreatorViewModel
 
-class CreatorRVAdapter(private val itemsList : ArrayList<CreatorModel>) : RecyclerView.Adapter<CreatorRVAdapter.CreatorViewHolder>() {
+class CreatorRVAdapter(private val viewModel : CreatorViewModel) : RecyclerView.Adapter<CreatorRVAdapter.CreatorViewHolder>() {
+
+    private val itemsList : ArrayList<CreatorModel> = viewModel.itemsList.value!!
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreatorViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
@@ -32,6 +34,7 @@ class CreatorRVAdapter(private val itemsList : ArrayList<CreatorModel>) : Recycl
         }
 
         val amount = holder.tvAmountCreator
+        var amountInList = itemsList[position].amount
         var amountInt = amount.text.toString().toInt()
 
         holder.ivRemoveAmountCreator.setOnClickListener {
@@ -40,8 +43,11 @@ class CreatorRVAdapter(private val itemsList : ArrayList<CreatorModel>) : Recycl
                 return@setOnClickListener
             }
             amountInt -= 1
-            itemsList[position].amount = amountInt
-            amount.text = itemsList[position].amount.toString()
+            val item = CreatorModel(itemsList[position].title, amountInt)
+            viewModel.removeItemAt(position)
+            viewModel.addItemAt(position, item)
+            notifyItemChanged(position, item)
+            amount.text = amountInList.toString()
         }
         holder.ivAddAmountCreator.setOnClickListener { v ->
 
@@ -50,7 +56,12 @@ class CreatorRVAdapter(private val itemsList : ArrayList<CreatorModel>) : Recycl
                 return@setOnClickListener
             }
             amountInt += 1
-            amount.text = amountInt.toString()
+            val item = CreatorModel(itemsList[position].title, amountInt)
+            viewModel.removeItemAt(position)
+            viewModel.addItemAt(position, item)
+            notifyItemChanged(position, item)
+//            amountInList = amountInt
+            amount.text = amountInList.toString()
 
         }
 
@@ -61,7 +72,7 @@ class CreatorRVAdapter(private val itemsList : ArrayList<CreatorModel>) : Recycl
     override fun getItemCount() = itemsList.size
 
     private fun removeItem(pos : Int) {
-        itemsList.removeAt(pos)
+        viewModel.removeItemAt(pos)
         notifyItemRemoved(pos)
         notifyDataSetChanged()
     }

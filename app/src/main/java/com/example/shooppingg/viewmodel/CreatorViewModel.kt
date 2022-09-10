@@ -21,9 +21,21 @@ class CreatorViewModel : ViewModel() {
 
     private val _itemsList = MutableLiveData<ArrayList<CreatorModel>>().apply { value = arrayListOf()}
     val itemsList get() = _itemsList
-
     fun addItem(item: CreatorModel) {
-        _itemsList.value!!.add(item)
+        val list = _itemsList.value
+        list!!.add(item)
+        _itemsList.value = list
     }
+    fun removeItemAt(pos : Int) {
+        val list = _itemsList.value
+        list!!.removeAt(pos)
+        _itemsList.value = list
+    }
+    fun addItemAt(pos: Int, item: CreatorModel) {
+        val list = _itemsList.value
+        list!!.add(pos, item)
+        _itemsList.value = list
+    }
+
 
 }

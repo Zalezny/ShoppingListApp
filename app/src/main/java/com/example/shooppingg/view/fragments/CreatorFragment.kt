@@ -16,6 +16,7 @@ import com.example.shooppingg.databinding.FragmentCreatorBinding
 import com.example.shooppingg.model.CreatorModel
 import com.example.shooppingg.view.adapters.CreatorRVAdapter
 import com.example.shooppingg.viewmodel.CreatorViewModel
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class CreatorFragment : Fragment() {
     private val viewModel: CreatorViewModel by activityViewModels()
@@ -46,10 +47,10 @@ class CreatorFragment : Fragment() {
         // Recycler View of Creator
         val rvCreator = binding.creatorListItemRecyclerView
         // Adapter of CreatorRVAdapter
-        val rvAdapter = CreatorRVAdapter(viewModel.itemsList.value!!)
+        val rvAdapter = CreatorRVAdapter(viewModel)
 
         // init observers ui
-        initObservers(atvCreator)
+        initObservers(atvCreator, exFabCreator)
 
         viewModel.setRecyclerViewAdapter(rvAdapter)
         // Set layout manager of rvCreator
@@ -73,7 +74,7 @@ class CreatorFragment : Fragment() {
                         viewModel.addItem(obj)
                         rvAdapter.notifyDataSetChanged()
                         viewModel.setAtvText("")
-                        exFabCreator.visibility = View.VISIBLE
+
                     }
 
             }
@@ -89,12 +90,16 @@ class CreatorFragment : Fragment() {
         _binding = null
     }
 
-    private fun initObservers(atvCreator : AutoCompleteTextView) {
+    private fun initObservers(atvCreator : AutoCompleteTextView, exFabCreator : ExtendedFloatingActionButton) {
         //set text on the start of atvText
         atvCreator.setText(viewModel.getAtvText().value)
         //observer of atvText
         viewModel.getAtvText().observe(viewLifecycleOwner){
             atvCreator.setText(it)
+        }
+        //Expanded Floating Button visibility
+        viewModel.itemsList.observe(viewLifecycleOwner) {
+            exFabCreator.visibility = if(it.isNullOrEmpty()) View.GONE else View.VISIBLE
         }
     }
 
