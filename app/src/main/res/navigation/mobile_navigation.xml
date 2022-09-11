@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.shooppingg.view.fragments.CreatorFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_creator"
         tools:layout="@layout/fragment_creator" />
 
     <fragment

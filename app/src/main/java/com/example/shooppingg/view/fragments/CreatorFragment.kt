@@ -1,5 +1,6 @@
 package com.example.shooppingg.view.fragments
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -8,10 +9,13 @@ import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.shooppingg.R
 import com.example.shooppingg.databinding.FragmentCreatorBinding
 import com.example.shooppingg.model.CreatorModel
 import com.example.shooppingg.view.adapters.CreatorRVAdapter
@@ -32,8 +36,6 @@ class CreatorFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val creatorViewModel =
-            ViewModelProvider(this).get(CreatorViewModel::class.java)
 
         _binding = FragmentCreatorBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -79,6 +81,13 @@ class CreatorFragment : Fragment() {
 
             }
             false
+        }
+
+        exFabCreator.setOnClickListener {
+            val newDialog = CreatorSummaryDialogFragment()
+            val bundleDialog = bundleOf("itemsList" to viewModel.itemsList.value)
+            newDialog.arguments = bundleDialog
+            newDialog.show(requireActivity().supportFragmentManager, "summary")
         }
 
         
