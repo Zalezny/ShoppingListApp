@@ -84,6 +84,9 @@ class CreatorFragment : Fragment() {
         }
 
         exFabCreator.setOnClickListener {
+
+
+
             val newDialog = CreatorSummaryDialogFragment()
             val bundleDialog = bundleOf("itemsList" to viewModel.itemsList.value)
             newDialog.arguments = bundleDialog

@@ -10,9 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shooppingg.R
 import com.example.shooppingg.databinding.FragmentCreatorBinding
 import com.example.shooppingg.databinding.FragmentCreatorSummaryDialogBinding
+import com.example.shooppingg.model.CreatorModel
+import com.example.shooppingg.view.adapters.CreatorDialogRVAdapter
 import com.example.shooppingg.viewmodel.CreatorSummaryDialogViewModel
 
 class CreatorSummaryDialogFragment : DialogFragment() {
@@ -33,11 +36,12 @@ class CreatorSummaryDialogFragment : DialogFragment() {
         _binding = FragmentCreatorSummaryDialogBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val itemsList = arguments?.getString("itemsList")
+//        val itemsList = arguments?.getParcelableArrayList<CreatorModel>("itemsList")
         viewModel = ViewModelProvider(this).get(CreatorSummaryDialogViewModel::class.java)
 
         val rvSummaryDialog = binding.rvCreatorSummaryDialog
-
+        rvSummaryDialog.layoutManager = LinearLayoutManager(activity)
+//        rvSummaryDialog.adapter = CreatorDialogRVAdapter(itemsList!!)
 
         return root
     }
