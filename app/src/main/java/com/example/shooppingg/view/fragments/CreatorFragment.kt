@@ -1,5 +1,6 @@
 package com.example.shooppingg.view.fragments
 
+import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
@@ -17,10 +18,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shooppingg.R
 import com.example.shooppingg.databinding.FragmentCreatorBinding
+
 import com.example.shooppingg.model.CreatorModel
 import com.example.shooppingg.view.adapters.CreatorRVAdapter
 import com.example.shooppingg.viewmodel.CreatorViewModel
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.gson.Gson
 
 class CreatorFragment : Fragment() {
     private val viewModel: CreatorViewModel by activityViewModels()
@@ -54,7 +57,6 @@ class CreatorFragment : Fragment() {
         // init observers ui
         initObservers(atvCreator, exFabCreator)
 
-        viewModel.setRecyclerViewAdapter(rvAdapter)
         // Set layout manager of rvCreator
         rvCreator.layoutManager = LinearLayoutManager(context)
         // Set adapter of rvCreator
@@ -84,11 +86,11 @@ class CreatorFragment : Fragment() {
         }
 
         exFabCreator.setOnClickListener {
-
-
+            val gson = Gson()
+            val itemsListJson = gson.toJson(viewModel.itemsList.value)
 
             val newDialog = CreatorSummaryDialogFragment()
-            val bundleDialog = bundleOf("itemsList" to viewModel.itemsList.value)
+            val bundleDialog = bundleOf("itemsListJson" to itemsListJson)
             newDialog.arguments = bundleDialog
             newDialog.show(requireActivity().supportFragmentManager, "summary")
         }

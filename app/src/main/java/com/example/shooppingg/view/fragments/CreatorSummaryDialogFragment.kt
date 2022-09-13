@@ -2,6 +2,7 @@ package com.example.shooppingg.view.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -11,54 +12,47 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.shooppingg.R
-import com.example.shooppingg.databinding.FragmentCreatorBinding
 import com.example.shooppingg.databinding.FragmentCreatorSummaryDialogBinding
+
+
 import com.example.shooppingg.model.CreatorModel
 import com.example.shooppingg.view.adapters.CreatorDialogRVAdapter
 import com.example.shooppingg.viewmodel.CreatorSummaryDialogViewModel
+import com.google.gson.Gson
 
 class CreatorSummaryDialogFragment : DialogFragment() {
 
     private lateinit var viewModel: CreatorSummaryDialogViewModel
 
-    private var _binding: FragmentCreatorSummaryDialogBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCreatorSummaryDialogBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-//        val itemsList = arguments?.getParcelableArrayList<CreatorModel>("itemsList")
-        viewModel = ViewModelProvider(this).get(CreatorSummaryDialogViewModel::class.java)
-
-        val rvSummaryDialog = binding.rvCreatorSummaryDialog
-        rvSummaryDialog.layoutManager = LinearLayoutManager(activity)
-//        rvSummaryDialog.adapter = CreatorDialogRVAdapter(itemsList!!)
-
-        return root
-    }
-
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
-
+        //init viewmodel for this fragment
+        viewModel = ViewModelProvider(this).get(CreatorSummaryDialogViewModel::class.java)
+        //init gson (need it to serialize)
+        val gson = Gson()
+        //take itemsList like json
+        val itemsListJson = arguments?.getString("itemsListJson")
+        //set array in viewmodel of list items
+        viewModel.setArray(gson.fromJson(itemsListJson, Array<CreatorModel>::class.java))
 
 
         return activity?.let {
+            //set view
+            val view = requireActivity().layoutInflater.inflate(R.layout.fragment_creator_summary_dialog, null)
+            //set RecyclerView of this dialog fragment
+            val rv : RecyclerView = view.findViewById(R.id.rvCreatorSummaryDialog)
+            rv.layoutManager = LinearLayoutManager(context)
+            rv.adapter = CreatorDialogRVAdapter(viewModel)
+            rv.setHasFixedSize(true)
+
+
             // Use the Builder class for convenient dialog construction
             val builder = AlertDialog.Builder(it)
             builder
                 .setTitle("SUMMARY")
                 .setMessage("Is it everything? Choose a category")
-                .setView(R.layout.fragment_creator_summary_dialog)
+                .setView(view)
                 .setPositiveButton("YES",
                     DialogInterface.OnClickListener { dialog, id ->
                         // START THE GAME!

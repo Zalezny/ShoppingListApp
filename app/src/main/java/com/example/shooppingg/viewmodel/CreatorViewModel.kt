@@ -8,12 +8,7 @@ import com.example.shooppingg.view.adapters.CreatorRVAdapter
 
 class CreatorViewModel : ViewModel() {
 
-    private val _recyclerViewAdapter = MutableLiveData<CreatorRVAdapter>()
 
-    fun getRecyclerViewAdapter() = _recyclerViewAdapter
-    fun setRecyclerViewAdapter(rvAdapter : CreatorRVAdapter) {
-        _recyclerViewAdapter.value = rvAdapter
-    }
 
     private val _atvText = MutableLiveData<String>().apply { value = "" }
     fun getAtvText() = _atvText
