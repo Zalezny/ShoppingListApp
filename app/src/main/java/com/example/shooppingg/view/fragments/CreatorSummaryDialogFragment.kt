@@ -43,7 +43,7 @@ class CreatorSummaryDialogFragment : DialogFragment() {
             //set RecyclerView of this dialog fragment
             val rv : RecyclerView = view.findViewById(R.id.rvCreatorSummaryDialog)
             rv.layoutManager = LinearLayoutManager(context)
-            rv.adapter = CreatorDialogRVAdapter(viewModel)
+            rv.adapter = CreatorDialogRVAdapter(viewModel, this.requireActivity())
             rv.setHasFixedSize(true)
 
 
