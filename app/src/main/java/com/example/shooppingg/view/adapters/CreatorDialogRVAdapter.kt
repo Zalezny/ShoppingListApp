@@ -38,7 +38,7 @@ class CreatorDialogRVAdapter(private val viewModel : CreatorSummaryDialogViewMod
         //set adapter in atvCategory
         atvCategory.setAdapter(arrayAdapter)
 
-        
+
 
         atvCategory.setOnItemClickListener { _, _, posAdapter, _ ->
             val value = arrayAdapter.getItem(posAdapter)
