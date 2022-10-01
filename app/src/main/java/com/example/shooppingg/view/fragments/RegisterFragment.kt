@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.shooppingg.R
 import com.example.shooppingg.databinding.FragmentRegisterBinding
+import com.example.shooppingg.viewmodel.RegisterViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterFragment : Fragment() {
@@ -42,7 +42,7 @@ class RegisterFragment : Fragment() {
         }
 
 
-        return inflater.inflate(R.layout.fragment_register, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -66,5 +66,7 @@ class RegisterFragment : Fragment() {
                 }
             }
     }
+
+
 
 }

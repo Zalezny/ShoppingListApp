@@ -1,4 +1,4 @@
-package com.example.shooppingg.view.fragments
+package com.example.shooppingg.viewmodel
 
 import androidx.lifecycle.ViewModel
 

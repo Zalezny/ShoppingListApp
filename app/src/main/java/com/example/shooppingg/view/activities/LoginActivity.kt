@@ -20,7 +20,7 @@ class LoginActivity : AppCompatActivity() {
         
         setContentView(R.layout.activity_login)
 
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_login)
+//        val navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_login)
 
 //        NavigationUI.setupActionBarWithNavController(this , navController)
 

@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        if(true) {
+        if(currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
@@ -55,4 +55,5 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+    
 }
